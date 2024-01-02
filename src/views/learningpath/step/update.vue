@@ -50,13 +50,12 @@
         </el-form-item>
         <div class="title mt-30">学习步骤关联课程</div>
         <div class="float-left mb-30">
-          <p-button
-            text="添加课程"
-            p="addons.learnPaths.relation.store"
+          <el-button
             @click="showSelectResourceCoursesWin = true"
             type="primary"
           >
-          </p-button>
+            添加课程
+          </el-button>
           <select-resource
             :selectedVod="coursesVodId"
             :selectedLive="coursesLiveId"
@@ -131,13 +130,12 @@
               min-width="6%"
             >
               <template slot-scope="scope">
-                <p-link
-                  text="删除"
+                <el-link
                   class="ml-5"
-                  p="addons.learnPaths.relation.update"
                   type="danger"
                   @click="delCourses(scope.row.row_index)"
-                ></p-link>
+                  >删除</el-link
+                >
               </template>
             </el-table-column>
           </el-table>
