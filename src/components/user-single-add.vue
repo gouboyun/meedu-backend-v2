@@ -187,7 +187,6 @@ export default {
         this.loading = false;
         this.users = res.data.data.data;
         this.total = res.data.data.total;
-        console.log("radio" + this.radio);
         this.filterData.tags = res.data.tags;
         this.filterData.roles = res.data.roles;
       });
