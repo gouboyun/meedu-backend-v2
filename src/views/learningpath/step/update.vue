@@ -61,12 +61,13 @@
             :selectedLive="coursesLiveId"
             :selectedBook="bookId"
             :selectedPaper="paperId"
+            :selectedMockPaper="mockPaperId"
             :selectedPractice="practiceId"
             type="learnPath"
             :show="showSelectResourceCoursesWin"
             @close="showSelectResourceCoursesWin = false"
             @change="changeCourses"
-            enabled-resource="vod,live,book,paper,practice"
+            enabled-resource="vod,live,book,paper,mock_paper,practice"
           ></select-resource>
         </div>
         <div class="float-left">
@@ -88,7 +89,9 @@
                 </template>
                 <template
                   v-else-if="
-                    scope.row.type === 'paper' || scope.row.type === 'practice'
+                    scope.row.type === 'paper' ||
+                    scope.row.type === 'mock_paper' ||
+                    scope.row.type === 'practice'
                   "
                 >
                   <thumb-bar
@@ -114,6 +117,9 @@
                 <span v-else-if="scope.row.type === 'live'">直播课程</span>
                 <span v-else-if="scope.row.type === 'book'">电子书</span>
                 <span v-else-if="scope.row.type === 'paper'">考试</span>
+                <span v-else-if="scope.row.type === 'mock_paper'"
+                  >模拟考试</span
+                >
                 <span v-else-if="scope.row.type === 'practice'">练习</span>
               </template>
             </el-table-column>
@@ -230,6 +236,17 @@ export default {
       }
       return params;
     },
+    mockPaperId() {
+      let params = [];
+      if (this.coursesData.length > 0) {
+        for (let i = 0; i < this.coursesData.length; i++) {
+          if (this.coursesData[i].type === "mock_paper") {
+            params.push(this.coursesData[i].id);
+          }
+        }
+      }
+      return params;
+    },
     bookId() {
       let params = [];
       if (this.coursesData.length > 0) {
@@ -291,6 +308,9 @@ export default {
             if (type === "paper_paper") {
               type = "paper";
             }
+            if (type === "paper_mock") {
+              type = "mock_paper";
+            }
             let item = {
               type: type,
               id: courses[i].other_id,
@@ -331,6 +351,9 @@ export default {
           }
           if (type === "paper") {
             type = "paper_paper";
+          }
+          if (type === "mock_paper") {
+            type = "paper_mock";
           }
           let item = {
             type: type,
