@@ -40,7 +40,7 @@
                 <template slot-scope="scope">
                   <span
                     class="c-green"
-                    v-if="scope.row.watch_seconds >= scope.row.duration"
+                    v-if="scope.row.watched_at"
                   >
                     已学完
                   </span>
