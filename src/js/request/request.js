@@ -754,6 +754,17 @@ const Api = {
         Users(id, params) {
           return get(`/backend/addons/LearningPaths/path/${id}/users`, params);
         },
+        AddUser(id, params) {
+          return post(
+            `/backend/addons/LearningPaths/path/${id}/user/create`,
+            params
+          );
+        },
+        DelUser(id, userId) {
+          return destroy(
+            `/backend/addons/LearningPaths/path/${id}/user/${userId}`
+          );
+        },
         Category: {
           List() {
             return get(`/backend/addons/LearningPaths/category/index`);

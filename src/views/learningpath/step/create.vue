@@ -49,24 +49,24 @@
         </el-form-item>
         <div class="title mt-30">学习步骤关联课程</div>
         <div class="float-left mb-30">
-          <p-button
-            text="添加课程"
-            p="addons.learnPaths.relation.store"
+          <el-button
             @click="showSelectResourceCoursesWin = true"
             type="primary"
           >
-          </p-button>
+            添加课程
+          </el-button>
           <select-resource
             :selectedVod="coursesVodId"
             :selectedLive="coursesLiveId"
             :selectedBook="bookId"
             :selectedPaper="paperId"
+            :selectedMockPaper="mockPaperId"
             :selectedPractice="practiceId"
             type="learnPath"
             :show="showSelectResourceCoursesWin"
             @close="showSelectResourceCoursesWin = false"
             @change="changeCourses"
-            enabled-resource="vod,live,book,paper,practice"
+            enabled-resource="vod,live,book,paper,mock_paper,practice"
           ></select-resource>
         </div>
         <div class="float-left">
@@ -88,7 +88,9 @@
                 </template>
                 <template
                   v-else-if="
-                    scope.row.type === 'paper' || scope.row.type === 'practice'
+                    scope.row.type === 'paper' ||
+                    scope.row.type === 'mock_paper' ||
+                    scope.row.type === 'practice'
                   "
                 >
                   <thumb-bar
@@ -114,6 +116,9 @@
                 <span v-else-if="scope.row.type === 'live'">直播课程</span>
                 <span v-else-if="scope.row.type === 'book'">电子书</span>
                 <span v-else-if="scope.row.type === 'paper'">考试</span>
+                <span v-else-if="scope.row.type === 'mock_paper'"
+                  >模拟考试</span
+                >
                 <span v-else-if="scope.row.type === 'practice'">练习</span>
               </template>
             </el-table-column>
@@ -130,13 +135,12 @@
               min-width="6%"
             >
               <template slot-scope="scope">
-                <p-link
-                  text="删除"
+                <el-link
                   class="ml-5"
-                  p="addons.learnPaths.relation.update"
                   type="danger"
                   @click="delCourses(scope.row.row_index)"
-                ></p-link>
+                  >删除</el-link
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -238,6 +242,17 @@ export default {
       }
       return params;
     },
+    mockPaperId() {
+      let params = [];
+      if (this.coursesData.length > 0) {
+        for (let i = 0; i < this.coursesData.length; i++) {
+          if (this.coursesData[i].type === "mock_paper") {
+            params.push(this.coursesData[i].id);
+          }
+        }
+      }
+      return params;
+    },
     bookId() {
       let params = [];
       if (this.coursesData.length > 0) {
@@ -307,6 +322,9 @@ export default {
           }
           if (type === "paper") {
             type = "paper_paper";
+          }
+          if (type === "mock_paper") {
+            type = "paper_mock";
           }
           let item = {
             type: type,

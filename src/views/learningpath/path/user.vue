@@ -2,6 +2,12 @@
   <div class="meedu-main-body">
     <back-bar class="mb-30" title="付费学员"></back-bar>
     <div class="float-left mb-30">
+      <p-button
+        text="添加学员"
+        type="primary"
+        p="addons.learnPaths.path.user.store"
+        @click="showUserAddWin = true"
+      ></p-button>
       <el-button @click="exportexcel" type="primary">导出表格</el-button>
     </div>
     <div class="float-left" v-loading="loading">
@@ -39,6 +45,16 @@
               scope.row.updated_at | dateFormat
             }}</template>
           </el-table-column>
+          <el-table-column fixed="right" label="操作" width="120" align="right">
+            <template slot-scope="scope">
+              <p-link
+                text="删除"
+                type="danger"
+                @click="delUser(scope.row.user_id)"
+                p="addons.learnPaths.path.user.destroy"
+              ></p-link>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
 
@@ -56,21 +72,21 @@
       </div>
     </div>
 
-    <user-add-comp
+    <user-single-add
       :show="showUserAddWin"
       @close="showUserAddWin = false"
       @confirm="userAddChange"
-    ></user-add-comp>
+    ></user-single-add>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import UserAddComp from "@/components/user-add";
+import UserSingleAdd from "@/components/user-single-add";
 
 export default {
   components: {
-    UserAddComp,
+    UserSingleAdd,
   },
   data() {
     return {
@@ -142,26 +158,14 @@ export default {
         }
       );
     },
-    delUser() {
-      if (this.selectedRows === null || this.selectedRows.length === 0) {
-        this.$message.warning("请选择需要操作的数据");
-        return;
-      }
-      this.$confirm("确认操作？", "警告", {
+    delUser(uid) {
+      this.$confirm("确认删除此学员？", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(() => {
-          let ids = [];
-          this.selectedRows.forEach((item) => {
-            ids.push(item.id);
-          });
-
-          this.$api.Course.Topic.Topic.DelUser({
-            topic_id: this.filter.topic_id,
-            ids: ids.join(","),
-          })
+          this.$api.Course.LearnPath.Path.DelUser(this.$route.query.id, uid)
             .then(() => {
               this.$message.success(this.$t("common.success"));
               this.firstPageLoad();
@@ -172,15 +176,9 @@ export default {
         })
         .catch(() => {});
     },
-    userAddChange(rows) {
-      let ids = [];
-      rows.forEach((item) => {
-        ids.push(item.id);
-      });
-
-      this.$api.Course.Topic.Topic.AddUser({
-        topic_id: this.filter.topic_id,
-        ids: ids,
+    userAddChange(uid) {
+      this.$api.Course.LearnPath.Path.AddUser(this.$route.query.id, {
+        user_id: uid,
       })
         .then(() => {
           this.$message.success(this.$t("common.success"));
