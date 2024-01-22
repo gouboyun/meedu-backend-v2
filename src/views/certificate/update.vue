@@ -177,7 +177,7 @@
                   :show="showSelectResourcePaperWin"
                   @close="showSelectResourcePaperWin = false"
                   @change="changePaper"
-                  enabled-resource="paper"
+                  enabled-resource="paper,mock_paper"
                 ></select-resource>
               </div>
               <div
@@ -193,7 +193,8 @@
                       width="15"
                       height="15"
                     />
-                    {{ item.title }}
+                    {{ item.type === "paper" ? "考试卷-" : "模拟卷-"
+                    }}{{ item.title }}
                   </div>
                 </template>
               </div>
@@ -618,6 +619,13 @@ export default {
               thumb: data[j].res_thumb,
             });
             if (data[j].res_type === "paper") {
+              paperData.push({
+                type: data[j].res_type,
+                id: data[j].res_id,
+                title: data[j].res_title,
+                thumb: data[j].res_thumb,
+              });
+            } else if (data[j].res_type === "mock_paper") {
               paperData.push({
                 type: data[j].res_type,
                 id: data[j].res_id,

@@ -177,7 +177,7 @@
                   :show="showSelectResourcePaperWin"
                   @close="showSelectResourcePaperWin = false"
                   @change="changePaper"
-                  enabled-resource="paper"
+                  enabled-resource="paper,mock_paper"
                 ></select-resource>
               </div>
               <div
@@ -193,7 +193,8 @@
                       width="15"
                       height="15"
                     />
-                    {{ item.title }}
+                    {{ item.type === "paper" ? "考试卷-" : "模拟卷-"
+                    }}{{ item.title }}
                   </div>
                 </template>
               </div>
