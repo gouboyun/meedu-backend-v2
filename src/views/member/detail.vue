@@ -169,10 +169,6 @@
           :id="id"
           v-else-if="courseTabActive === 'video-watch-records'"
         ></user-video-watch-records-comp>
-        <user-live-watch-records-comp
-          :id="id"
-          v-else-if="courseTabActive === 'live'"
-        ></user-live-watch-records-comp>
         <user-balance-records-comp
           :id="id"
           v-else-if="courseTabActive === 'balanceRecords'"
@@ -181,6 +177,18 @@
           :id="id"
           v-else-if="courseTabActive === 'iOSRecords'"
         ></user-iOS-records-comp>
+        <user-live-comp
+          :id="id"
+          v-else-if="courseTabActive === 'live'"
+        ></user-live-comp>
+        <user-book-comp
+          :id="id"
+          v-else-if="courseTabActive === 'book'"
+        ></user-book-comp>
+        <user-topic-comp
+          :id="id"
+          v-else-if="courseTabActive === 'topic'"
+        ></user-topic-comp>
       </div>
     </div>
     <member-dialog
@@ -224,12 +232,14 @@
 
 <script>
 import { mapState } from "vuex";
-import UserLiveWatchRecordsComp from "./detail/live-watch-records.vue";
 import UserOrdersComp from "./detail/orders.vue";
 import UserCredit1Comp from "./detail/credit1.vue";
 import UserInviteComp from "./detail/invite.vue";
 import UserVodWatchRecordsComp from "./detail/vod-watch-records.vue";
 import UserVideoWatchRecordsComp from "./detail/video-watch-records.vue";
+import UserLiveComp from "./detail/live.vue";
+import UserBookComp from "./detail/book.vue";
+import UserTopicComp from "./detail/topic.vue";
 import MemberDialog from "./components/member-dialog";
 import CreditDialog from "./components/credit-dialog";
 import RemarkDialog from "./components/remark-dialog";
@@ -245,7 +255,9 @@ export default {
     UserInviteComp,
     UserVodWatchRecordsComp,
     UserVideoWatchRecordsComp,
-    UserLiveWatchRecordsComp,
+    UserLiveComp,
+    UserBookComp,
+    UserTopicComp,
     MemberDialog,
     CreditDialog,
     RemarkDialog,
@@ -302,12 +314,12 @@ export default {
       //     key: "topics",
       //   });
       // }
-      if (this.checkPermission("v2.member.videos")) {
-        types.push({
-          name: "单独订阅课时",
-          key: "video-watch-records",
-        });
-      }
+      // if (this.checkPermission("v2.member.videos")) {
+      //   types.push({
+      //     name: "单独订阅课时",
+      //     key: "video-watch-records",
+      //   });
+      // }
       types.push(
         ...[
           {
@@ -336,6 +348,24 @@ export default {
         types.push({
           name: "iOS余额明细",
           key: "iOSRecords",
+        });
+      }
+      if (this.through("addons.Zhibo.user.index")) {
+        types.push({
+          name: "已购直播课",
+          key: "live",
+        });
+      }
+      if (this.through("addons.meedu_books.user.index")) {
+        types.push({
+          name: "已购电子书",
+          key: "book",
+        });
+      }
+      if (this.through("addons.meedu_topics.orders")) {
+        types.push({
+          name: "已购图文",
+          key: "topic",
         });
       }
 

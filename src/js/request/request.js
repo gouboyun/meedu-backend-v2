@@ -1237,6 +1237,15 @@ const Api = {
         params
       );
     },
+    UserLive(params) {
+      return get(`/backend/addons/zhibo/user/index`, params);
+    },
+    UserBook(params) {
+      return get(`/backend/addons/meedu_books/user/index`, params);
+    },
+    UserTopic(params) {
+      return get(`/backend/addons/meedu_topics/orders`, params);
+    },
     TagUpdate(id, params) {
       return put(`/backend/api/v1/member/${id}/tags`, params);
     },
