@@ -182,7 +182,7 @@
       <p class="info">
         <span>PHP{{ systemInfo.php_version }} </span>
         <span class="mx-10">API程序{{ systemInfo.meedu_version }}</span>
-        <span>后台前端程序v4.9.14</span>
+        <span>后台前端程序v4.9.15</span>
       </p>
     </div>
   </div>
