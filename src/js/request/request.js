@@ -1189,6 +1189,9 @@ const Api = {
     Destroy(id) {
       return destroy(`/backend/api/v2/member/${id}`);
     },
+    ResetProfile(id) {
+      return destroy(`/backend/api/v1/member/${id}/profile`);
+    },
     Import(params) {
       return post(`/backend/api/v1/member/import`, params);
     },

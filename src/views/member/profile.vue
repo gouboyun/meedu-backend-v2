@@ -75,8 +75,7 @@ export default {
     height: auto;
     float: left;
     box-sizing: border-box;
-    padding-bottom: 20px;
-    padding-top: 10px;
+    padding-top: 20px;
     display: grid;
     row-gap: 30px;
     column-gap: 0px;
@@ -90,6 +89,7 @@ export default {
     }
   }
 }
+
 .info-item {
   width: 324px;
   height: auto;

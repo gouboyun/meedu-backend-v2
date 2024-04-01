@@ -20,12 +20,7 @@
               <el-link
                 type="primary"
                 class="edit-profile"
-                @click="
-                  $router.push({
-                    name: 'MemberProfile',
-                    params: { userId: id },
-                  })
-                "
+                @click="showProfileWin = true"
                 >实名信息</el-link
               >
               <p-link
@@ -227,6 +222,13 @@
       @close="showIOSWin = false"
       @success="successEvt"
     ></iOS-dialog>
+    <my-profile-dialog
+      :key="userData.id"
+      v-if="showProfileWin"
+      :id="userData.id"
+      @close="showProfileWin = false"
+      @success="successEvt"
+    ></my-profile-dialog>
   </div>
 </template>
 
@@ -245,6 +247,7 @@ import CreditDialog from "./components/credit-dialog";
 import RemarkDialog from "./components/remark-dialog";
 import TagsDialog from "./components/tags-dialog";
 import IOSDialog from "./components/iOS-dialog";
+import MyProfileDialog from "./components/my-profile-dialog";
 import UserBalanceRecordsComp from "./detail/balanceRecords.vue";
 import UserIOSRecordsComp from "./detail/iOSRecords.vue";
 
@@ -263,6 +266,7 @@ export default {
     RemarkDialog,
     TagsDialog,
     IOSDialog,
+    MyProfileDialog,
     UserBalanceRecordsComp,
     UserIOSRecordsComp,
   },
@@ -279,6 +283,7 @@ export default {
       showRemarkWin: false,
       showTagsWin: false,
       showIOSWin: false,
+      showProfileWin: false,
     };
   },
   computed: {
@@ -392,6 +397,7 @@ export default {
       this.showCreditWin = false;
       this.showRemarkWin = false;
       this.showTagsWin = false;
+      this.showProfileWin = false;
       this.getUser();
     },
     changeCredit() {
