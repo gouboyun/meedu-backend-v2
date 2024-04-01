@@ -103,7 +103,7 @@
             <span v-else class="c-red">用户已删除</span>
           </template>
         </el-table-column>
-        <el-table-column label="商品名称" :width="300">
+        <el-table-column label="商品名称" :width="250">
           <template slot-scope="scope">
             <span v-for="item in scope.row.goods" :key="item.id">
               {{ item.goods_name }}
@@ -113,7 +113,10 @@
         <el-table-column sortable label="支付金额" :width="150">
           <template slot-scope="scope">¥{{ scope.row.charge }}</template>
         </el-table-column>
-        <el-table-column label="支付渠道" :width="150">
+        <el-table-column sortable label="优惠码金额" :width="150">
+          <template slot-scope="scope">{{ getRecharge(scope.row) }}</template>
+        </el-table-column>
+        <el-table-column label="支付渠道" :width="100">
           <template slot-scope="scope">
             <span v-if="scope.row.payment === 'alipay'">
               <img src="../../assets/img/ali-pay.png" width="30" height="30"
@@ -136,7 +139,7 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="status_text" label="支付状态" :width="150">
+        <el-table-column prop="status_text" label="支付状态" :width="100">
           <template slot-scope="scope">
             <span
               :class="{
@@ -483,6 +486,15 @@ export default {
       for (let i = 0; i < item.length; i++) {
         if (item[i].status === 1 || item[i].status === 5) {
           amount += item[i].amount / 100;
+        }
+      }
+      return "¥" + amount.toFixed(2);
+    },
+    getRecharge(item) {
+      let amount = 0;
+      for (let i = 0; i < item.paid_records.length; i++) {
+        if (item.paid_records[i].paid_type === 1) {
+          amount += item.paid_records[i].paid_total;
         }
       }
       return "¥" + amount.toFixed(2);
