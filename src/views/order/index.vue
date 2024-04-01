@@ -497,7 +497,7 @@ export default {
           amount += item.paid_records[i].paid_total;
         }
       }
-      return "¥" + amount.toFixed(2);
+      return amount > 0 ? "¥" + amount.toFixed(2) : "-";
     },
     paginationSizeChange(size) {
       this.pagination.page = 1;
@@ -585,6 +585,7 @@ export default {
             "学员",
             "商品名称",
             "支付金额",
+            "优惠码金额",
             "支付渠道",
             "支付状态",
             "退款",
@@ -597,7 +598,8 @@ export default {
             item.user_id,
             users[item.user_id] ? users[item.user_id].nick_name : "用户已删除",
             item.goods[0] ? item.goods[0].goods_name : "商品已删除",
-            item.charge + "元",
+            "¥" + item.charge,
+            this.getRecharge(item),
             item.payment_text,
             item.status_text,
             item.is_refund === 0 ? "-" : this.showRefund(item.refund),
@@ -611,6 +613,7 @@ export default {
           { wch: 10 },
           { wch: 20 },
           { wch: 30 },
+          { wch: 15 },
           { wch: 15 },
           { wch: 15 },
           { wch: 15 },
