@@ -22,12 +22,9 @@
           </el-table-column>
           <el-table-column prop="email" label="登录邮箱" width="220">
           </el-table-column>
-          <el-table-column sortable="" label="登录日志"
+          <el-table-column sortable="" label="登录时间"
             ><template slot-scope="scope">
-              <span
-                >{{ scope.row.last_login_date | dateFormat }} /
-                {{ scope.row.last_login_ip }}</span
-              >
+              <span>{{ scope.row.last_login_date | dateFormat }}</span>
             </template>
           </el-table-column>
 
