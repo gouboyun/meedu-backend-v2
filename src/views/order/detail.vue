@@ -2,12 +2,20 @@
   <div class="meedu-main-body" v-loading="loading">
     <back-bar class="mb-30" title="订单详情"></back-bar>
 
-    <div class="float-left mb-30" v-if="order && order.status !== 9">
+    <div class="float-left mb-30">
       <p-button
+        v-if="order && order.status !== 9"
         text="改为已支付"
         p="order.finish"
         type="danger"
         @click="setPaid"
+      ></p-button>
+      <p-button
+        v-if="order && (order.status === 5 || order.status === 1)"
+        text="取消订单"
+        p="order.cancel"
+        type="primary"
+        @click="cancelPaid"
       ></p-button>
     </div>
 
@@ -214,6 +222,31 @@ export default {
         .then(() => {
           this.loading = true;
           this.$api.Order.SetPaid(this.id)
+            .then(() => {
+              this.$message.success(this.$t("common.success"));
+              this.getDetail();
+              this.loading = false;
+            })
+            .catch((e) => {
+              this.loading = false;
+              this.$message.error(e.message);
+            });
+        })
+        .catch((e) => {});
+    },
+    cancelPaid() {
+      if (this.loading) {
+        return;
+      }
+
+      this.$confirm("确认操作？", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.loading = true;
+          this.$api.Order.CancelPaid(this.id)
             .then(() => {
               this.$message.success(this.$t("common.success"));
               this.getDetail();

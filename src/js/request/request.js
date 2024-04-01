@@ -103,6 +103,9 @@ const Api = {
     SetPaid(id) {
       return get(`/backend/api/v1/order/${id}/finish`);
     },
+    CancelPaid(id) {
+      return get(`/backend/api/v1/order/${id}/cancel`);
+    },
     RechargeOrders(params) {
       return get(`/backend/addons/TemplateOne/recharge/orders`, params);
     },
