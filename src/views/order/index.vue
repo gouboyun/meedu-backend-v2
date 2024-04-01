@@ -219,6 +219,18 @@
             text="退款成功不会自动取消课程/会员绑定关系，需手动操作。"
           ></helper-text>
         </div>
+        <div v-if="orderItem" class="float-left mt-30 mb-10">
+          订单支付总额：¥{{ orderItem.charge }} ，优惠码支付金额：¥{{
+            getRecharge2(orderItem)
+          }}，已退金额：
+          <span v-if="orderItem.is_refund === 0">¥0</span>
+          <span v-else-if="orderItem.refund"
+            >¥{{ getRefund(orderItem.refund) }}</span
+          >
+          <span v-else>¥0</span>
+          ，
+          <span class="c-red"> 可退金额：¥ {{ value }} </span>
+        </div>
         <div class="d-flex mt-20">
           <label class="mr-20"><span class="c-red mr-5">*</span>退款方式</label>
           <el-select class="el-item" v-model="form.is_local">
@@ -417,6 +429,8 @@ export default {
       dialogLoading: false,
       visible: false,
       oid: null,
+      orderItem: null,
+      value: 0,
       form: {
         is_local: null,
         reason: null,
@@ -469,6 +483,8 @@ export default {
         this.form.amount = null;
         this.form.reason = null;
         this.oid = null;
+        this.value = 0;
+        this.orderItem = null;
       }
     },
   },
@@ -490,6 +506,15 @@ export default {
       }
       return "¥" + amount.toFixed(2);
     },
+    getRefund(item) {
+      let amount = 0;
+      for (let i = 0; i < item.length; i++) {
+        if (item[i].status === 1 || item[i].status === 5) {
+          amount += item[i].amount / 100;
+        }
+      }
+      return amount;
+    },
     getRecharge(item) {
       let amount = 0;
       for (let i = 0; i < item.paid_records.length; i++) {
@@ -497,7 +522,16 @@ export default {
           amount += item.paid_records[i].paid_total;
         }
       }
-      return amount > 0 ? "¥" + amount.toFixed(2) : "-";
+      return amount > 0 ? "¥" + amount : "-";
+    },
+    getRecharge2(item) {
+      let amount = 0;
+      for (let i = 0; i < item.paid_records.length; i++) {
+        if (item.paid_records[i].paid_type === 1) {
+          amount += item.paid_records[i].paid_total;
+        }
+      }
+      return amount;
     },
     paginationSizeChange(size) {
       this.pagination.page = 1;
@@ -625,8 +659,21 @@ export default {
       });
     },
     refund(item) {
-      this.visible = true;
+      this.orderItem = item;
       this.oid = item.id;
+      let total = item.charge;
+      let num = this.getRecharge2(item);
+      let refund = 0;
+      if (item.is_refund === 0) {
+        refund = 0;
+      } else if (item.refund) {
+        refund = this.getRefund(item.refund);
+      } else {
+        refund = 0;
+      }
+      let val = total - num - refund;
+      this.value = val;
+      this.visible = true;
     },
     refundConfirm() {
       if (this.dialogLoading) {
@@ -644,6 +691,14 @@ export default {
         this.$message.error("请输入退款理由");
         return;
       }
+      if (this.value <= 0) {
+        this.$message.error("无法申请退款");
+        return;
+      }
+      if (this.form.amount > this.value) {
+        this.$message.error("超过可退金额");
+        return;
+      }
       this.dialogLoading = true;
       this.$api.Order.OrderList.Refund(this.oid, {
         is_local: this.form.is_local,
@@ -657,6 +712,7 @@ export default {
           this.form.amount = null;
           this.form.reason = null;
           this.oid = null;
+          this.orderItem = null;
           this.visible = false;
           this.getList();
         })
