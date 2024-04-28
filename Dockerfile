@@ -1,11 +1,11 @@
-FROM node:lts-slim
-WORKDIR /app/meedu-backend
+FROM nginx:alpine
 
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn config set registry https://registry.npm.taobao.org \
-    && yarn
+RUN mkdir -p /var/www
 
-COPY . .
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
-CMD ["yarn", "build"]
+COPY dist/ /var/www/pc/
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
