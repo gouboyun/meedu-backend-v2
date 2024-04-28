@@ -2,7 +2,7 @@
 const pathroot = require("path");
 
 module.exports = {
-  publicPath: "",
+  publicPath: "/backend",
   productionSourceMap: false,
   assetsDir: "static",
   devServer: {
